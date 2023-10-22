@@ -1,0 +1,90 @@
+<html>
+<head>
+    <title>Remove unwanted space from text</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        textarea {
+            width: 90%;
+            max-height: 30%;
+            margin-bottom: 20px;
+        }
+        textarea, button {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #message {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #111311;
+            color: #FFFFFF;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+  <h1>Text Formatter</h1>
+  <p>Enter your text below and click the button to format it.</p>
+  <textarea id="input" rows="10" cols="50"></textarea>
+
+  <button onclick="formatText()">Format</button>
+  <p>The formatted text will appear below.</p>
+  <textarea id="output" rows="10" cols="50" readonly></textarea>
+  <button onclick="copyText()">Copy</button>
+  <div id="message">Text copied to clipboard!</div>
+
+  <script>
+// Define a function to format the text and display the output
+function formatText() {
+    // Get the text input from a textarea element with id="input"
+    var input = document.getElementById("input").value;
+
+    // Check if the checkbox with the id remove is checked or not
+    var checkbox = document.getElementById('remove');
+    input = input.replace(/(<!--[\S\s]*?-->)|(\/\*[\S\s]*?\*\/)|(\/\/.*$)|\\+/gm, '/');
+
+  // Split the input by line breaks
+  var lines = input.split("\n");
+
+  // Trim the spaces at the beginning and end of each line
+  var trimmedLines = lines.map(line => line.trim());
+
+  // Replace any multiple spaces with a single space
+  var singleSpacedLines = trimmedLines.map(line => line.replace(/ +/g, ' '));
+
+  // Filter out any empty lines
+  var nonEmptyLines = singleSpacedLines.filter(line => line.length > 0);
+
+  // Join the lines with a single line break
+  var output = nonEmptyLines.join("\n").trim();
+
+  // Display the output in a textarea element with id="output"
+  document.getElementById("output").value = output;
+}
+
+function copyText() {
+  // Select the textarea element by its id
+  var textarea = document.getElementById("output");
+  // Select the text inside the textarea
+  textarea.select();
+  textarea.setSelectionRange(0, textarea.value.length);
+  // Copy the selected text to the clipboard
+  document.execCommand("copy");
+  // Select the div element by its id
+  var message = document.getElementById("message");
+  // Show the div element by changing its display style to block
+  message.style.display = "block";
+  // Hide the div element after 3 seconds by changing its display style to none
+  setTimeout(function() {
+    message.style.display = "none";
+  }, 3000);
+}
+  </script>
+</body>
+</html>
